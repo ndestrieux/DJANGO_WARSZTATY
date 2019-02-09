@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="screen-title">
+        <h2>Room details</h2>
+    </section>
+    <section id="content">
+        <p><b>Name:</b> {{ room.name }}</p>
+        <p><b>Capacity:</b> {{ room.capacity }}</p>
+        <p><b>Have projector:</b> {% if room.have_projector %}Yes{% else %}No{% endif %}</p>
+        <form action="{% url "reservation" %}" method="POST">
+            <button type="submit" name="book" value="{{ room.id }}">Book this room</button>
+            {% csrf_token %}
+        </form>
+    </section>
+{% endblock %}

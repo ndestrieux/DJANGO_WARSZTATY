@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="screen-title">
+        <h2>Search movie</h2>
+    </section>
+    <section id="content">
+        <div>
+            <form action=# method="POST">
+                <div class="label">
+                    <label>
+                        Title:
+                        <input type="text" name="title">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        First name:
+                        <input type="text" name="first_name">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        Last name:
+                        <input type="text" name="last_name">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        Year - from:
+                        <input type="number" name="year_from" min="1900" step="1">
+                        to:
+                        <input type="number" name="year_to" min="1900" step="1">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        Rating - from:
+                        <input type="number" name="rating_from" min="1.0" max="10.0" step=".1">
+                        to:
+                        <input type="number" name="rating_to" min="1.0" max="10.0" step=".1">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        Genre:
+                        <input type="text" name="genre"> *<br>
+                        <span id="note">*Use commas to search by multiple genres</span>
+                    </label>
+                </div>
+                <div class="label">
+                    <input type="submit" name="convertionType">
+                    {% csrf_token %}
+                </div>
+            </form>
+            <p class="errors">{{ error }}</p>
+        </div>
+        {% if search_result %}
+            <div>
+                <table>
+                    <tr>
+                        <th>Title</th>
+                        <th>Year</th>
+                        <th>Director</th>
+                        <th>Rating</th>
+                    </tr>
+                    <tbody>
+                    {% for i in search_result %}
+                        <tr>
+                            <td><a href="{% url "movie_details" i.id %}">{{ i.title }}</a></td>
+                            <td>{{ i.year }}</td>
+                            <td>{{ i.director.first_name }} {{ i.director.last_name }}</td>
+                            <td>{{ i.rating }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% elif no_data %}
+            <p>No data</p>
+        {% endif %}
+    </section>
+{% endblock %}

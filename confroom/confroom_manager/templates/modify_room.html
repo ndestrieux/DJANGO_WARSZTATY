@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="screen-title">
+        <h2>Modify room {{ room.name }}</h2>
+    </section>
+    <section id="content">
+        <form action=# method="POST">
+            <label>
+                Name<br>
+                <input type="text" name="name" maxlength="32" value="{{ room.name}}"><br>
+            </label>
+            <label>
+                Capacity<br>
+                <input type="number" name="capacity" min="1" max="100" value="{{ room.capacity }}"><br>
+            </label>
+            <label>
+                Have projector<br>
+                <input type="checkbox" name="have_projector" value="1" {% if room.have_projector %}checked{% endif %}><br>
+            </label>
+            <input type="submit" name="submit">
+            {% csrf_token %}
+        </form>
+        <p>{{ message }}</p>
+    </section>
+{% endblock %}

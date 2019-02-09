@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="screen-title">
+        <h2>Room list</h2>
+    </section>
+    <section id="content">
+        <div>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Capacity</th>
+                    <th>Have projector</th>
+                </tr>
+                <tbody>
+                {% for i in r %}
+                    <tr>
+                        <td><a href="{% url "room_details" i.id %}">{{ i.name }}</a>
+                            <sup><a href="{% url "modify_room" i.id %}">Edit</a></sup></td>
+                        <td>{{ i.capacity }}</td>
+                        <td>{% if i.have_projector %}Yes{% else %}No{% endif %}</td>
+                        <td><a href="{% url "del_room" i.id %}" class="button">Delete room</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <p><a href="{% url "new_room" %}">Add room to list</a></p>
+        </div>
+    </section>
+{% endblock %}

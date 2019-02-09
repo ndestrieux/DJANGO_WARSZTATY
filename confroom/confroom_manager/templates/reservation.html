@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="screen-title">
+        <h2>Room details</h2>
+    </section>
+    <section id="content">
+        <p><b>Name:</b> {{ room.name }}</p>
+        <label>
+            Comment<br>
+            <input type="number" name="capacity" min="1" max="100"><br>
+        </label>
+        <label>
+            Have projector<br>
+            <input type="checkbox" name="have_projector" value="1"><br>
+        </label>
+        <input type="submit" name="submit">
+        {% csrf_token %}
+    </section>
+{% endblock %}
