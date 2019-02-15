@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="screen-title">
+        <h2>Search available room</h2>
+    </section>
+    <section id="content">
+        <div>
+            <form action=# method="POST">
+                <div class="label">
+                    <label>
+                        Room name:
+                        <input type="text" name="name">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        Minimum capacity:
+                        <input type="number" name="minimum_capacity" min="0" value="0" step="1">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        Date:
+                        <input type="date" name="date" min="{{ now }}" value="{{ now }}">
+                    </label>
+                </div>
+                <div class="label">
+                    <label>
+                        Have projector:
+                        <input type="checkbox" name="have_projector" value="1">
+                    </label>
+                </div>
+                <div class="label">
+                    <input type="submit" name="Search">
+                    {% csrf_token %}
+                </div>
+            </form>
+            <p class="errors">{{ error }}</p>
+        </div>
+        {% if search_result %}
+            <div>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Capacity</th>
+                        <th>Have projector</th>
+                    </tr>
+                    <tbody>
+                    {% for i in search_result %}
+                        <tr>
+                            <td><a href="{% url "room_details" i.id %}">{{ i.name }}</a></td>
+                            <td>{{ i.capacity }}</td>
+                            <td>{% if i.have_projector %}Yes{% else %}No{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% elif no_data %}
+            <p>No data</p>
+        {% endif %}
+    </section>
+{% endblock %}

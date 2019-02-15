@@ -1,4 +1,5 @@
 from django.shortcuts import render, Http404
+from django.db.models import Q
 from datetime import datetime as dt
 from .models import *
 
@@ -116,3 +117,27 @@ def reservation(request):
 
 # Search a room
 
+def search(request):
+    now = dt.now().strftime("%Y-%m-%d")
+    if request.method == "GET":
+        return render(request, "search_room.html", {"now": now})
+    elif request.method == "POST":
+        try:
+            # collecting data from form
+            name = request.POST.get("name")
+            minimum_capacity = int(request.POST.get("minimum_capacity"))
+            date = dt.strptime(request.POST.get("date"), "%Y-%m-%d")
+            have_projector = bool(request.POST.get("have_projector"))
+            print(name, minimum_capacity, date, have_projector)
+            query = Q()
+            # build search by title query if not empty
+            if name is not "":
+                query.add(Q(name__icontains=name), Q.AND)
+            query.add(Q(capacity__gte=minimum_capacity), Q.AND)
+            query.add(Q(have_projector=have_projector), Q.AND)
+            search_result = Room.objects.filter(query).exclude(reservation__date__exact=date)
+            return render(request, "search_room.html", {"search_result": search_result, "now": now,
+                                                        "no_data": True if len(search_result) == 0 else False})
+        except ValueError as ve:
+            print(ve)
+            return render(request, "search_room.html")

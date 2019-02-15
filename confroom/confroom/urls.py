@@ -25,4 +25,5 @@ urlpatterns = [
     path('room/<int:room_id>', room_details, name="room_details"),
     path('', rooms, name="rooms"),
     path('reservation/', reservation, name="reservation"),
+    path('search/', search, name="search"),
 ]
