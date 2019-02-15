@@ -1,4 +1,4 @@
-##Conference room app
+# Conference room app
 
 #### Requirements:
 * python3==3.7
@@ -16,7 +16,7 @@
 5. You are ready now to run the app, run the command `python3 manage.py runserver`, the link to reach the app will be showing below.
 
 
-##App content
+## App content
 
 * From the main page, you will be able to add, delete or edit existing rooms. You will have also the possibility to room details from which you will be able to book the chosen room.
 * There is also a search menu from which you will be able to find available rooms on a given day.
