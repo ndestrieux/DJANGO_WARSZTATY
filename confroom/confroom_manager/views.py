@@ -1,10 +1,19 @@
 from django.shortcuts import render, Http404
+from datetime import datetime as dt
 from .models import *
 
 
 # Create your views here.
 
-# Room
+# Main page
+
+def rooms(request):
+    r = Room.objects.all()
+    print(r)
+    return render(request, "rooms.html", {"r": r})
+
+
+# Create new room
 
 def new_room(request):
     if request.method == "GET":
@@ -26,6 +35,8 @@ def new_room(request):
         except ValueError as ve:
             return render(request, "new_room.html", {"message": ve})
 
+
+# Update existing room
 
 def modify_room(request, room_id):
     try:
@@ -53,6 +64,8 @@ def modify_room(request, room_id):
         raise Http404(f"Room with ID {room_id} does not exist")
 
 
+# Delete room
+
 def del_room(request, room_id):
     try:
         room_to_delete = Room.objects.get(pk=room_id)
@@ -63,6 +76,8 @@ def del_room(request, room_id):
         raise Http404(f"Person with ID {room_id} does not exist")
 
 
+# Display room details
+
 def room_details(request, room_id):
     try:
         room = Room.objects.get(pk=room_id)
@@ -71,17 +86,33 @@ def room_details(request, room_id):
         raise Http404(f"Room with ID {room_id} does not exist")
 
 
-def rooms(request):
-    r = Room.objects.all()
-    print(r)
-    return render(request, "rooms.html", {"r": r})
-
+# Make a reservation
 
 def reservation(request):
-    try:
-        room_id = request.POST["book"]
-        room = Room.objects.get(pk=room_id)
-        return render(request, "reservation.html", {"room": room})
-    except Room.DoesNotExist:
-        raise Http404(f"Room with ID {room_id} does not exist")
+        try:
+            now = dt.now().strftime("%Y-%m-%d")
+            if request.method == "GET":
+                raise Http404("REQUEST METHOD ERROR: no room was chosen for reservation")
+            elif request.method == "POST":
+                if request.POST.get("book"):
+                    room_id = request.POST["book"]
+                    room = Room.objects.get(pk=room_id)
+                    return render(request, "reservation.html", {"room": room, "now": now})
+                elif request.POST.get("confirm"):
+                    room_id = request.POST.get("room_id")
+                    room = Room.objects.get(pk=room_id)
+                    date = dt.strptime(request.POST.get("date"), "%Y-%m-%d")
+                    comment = request.POST.get("comment")
+                    print(date)
+                    if Reservation.objects.filter(room=room, date=date).exists():
+                        return render(request, "reservation.html",
+                                      {"room": room, "now": now, "comment": comment, "error": True})
+                    Reservation.objects.create(room=room, date=date, comment=comment)
+                    return render(request, "reservation.html",
+                                  {"room": room, "reservation_date": dt.strftime(date, "%A %-d, %B %Y")})
+        except Room.DoesNotExist:
+            raise Http404(f"Room with ID {room_id} does not exist")
+
+
+# Search a room
 

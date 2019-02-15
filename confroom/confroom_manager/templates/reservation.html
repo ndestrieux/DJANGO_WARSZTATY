@@ -2,19 +2,37 @@
 
 {% block content %}
     <section id="screen-title">
-        <h2>Room details</h2>
+        <h2>Book room</h2>
     </section>
     <section id="content">
-        <p><b>Name:</b> {{ room.name }}</p>
-        <label>
-            Comment<br>
-            <input type="number" name="capacity" min="1" max="100"><br>
-        </label>
-        <label>
-            Have projector<br>
-            <input type="checkbox" name="have_projector" value="1"><br>
-        </label>
-        <input type="submit" name="submit">
-        {% csrf_token %}
+        <div>
+            <p><b>Name:</b> {{ room.name }}</p>
+            <p><b>Capacity:</b> {{ room.capacity }}</p>
+            <p><b>Have projector:</b> {% if room.have_projector %}Yes{% else %}No{% endif %}</p>
+        </div>
+        <div>
+            <form action="#" method="POST">
+                <input type="hidden" name="room_id" value="{{ room.id }}">
+                <label>
+                    Reservation date:<br>
+                    <input type="date" name="date" min="{{ date }}"><br>
+                </label>
+                <label>
+                    Comment:<br>
+                    <textarea name="comment" rows="4" cols="50">{{ comment }}</textarea><br>
+                </label>
+                <input type="submit" name="confirm">
+                {% csrf_token %}
+            </form>
+        </div>
+    {% if reservation_date %}
+        <div>
+            <p><b>Room booked for: {{ reservation_date }}</b></p>
+        </div>
+    {% elif error %}
+        <div>
+            <p class="errors">This room is already booked on the chosen day, pick another one</p>
+        </div>
+    {% endif %}
     </section>
 {% endblock %}

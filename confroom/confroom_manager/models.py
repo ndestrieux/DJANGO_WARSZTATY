@@ -10,6 +10,6 @@ class Room(models.Model):
 
 
 class Reservation(models.Model):
-    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date = models.DateField()
     comment = models.TextField(null=True)
